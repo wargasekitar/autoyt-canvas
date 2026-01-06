@@ -1,60 +1,75 @@
 "use client";
 import { useState } from "react";
+import { Film, Sparkles, Download, Loader2 } from "lucide-react";
 
 export default function DashboardPage() {
   const [idea, setIdea] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "done">("idle");
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+
+  const generate = async () => {
+    setStatus("loading");
+    const res = await fetch("/api/generate-video", {
+      method: "POST",
+      body: JSON.stringify({ idea }),
+    });
+
+    const { taskId } = await res.json();
+
+    const interval = setInterval(async () => {
+      const check = await fetch(`/api/check-status?taskId=${taskId}`);
+      const data = await check.json();
+
+      if (data.status === "done") {
+        clearInterval(interval);
+        setVideoUrl(data.videoUrl);
+        setStatus("done");
+      }
+    }, 4000);
+  };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white p-6">
-      <h1 className="text-2xl font-bold mb-6">🎬 AutoYT Canvas</h1>
+    <div className="min-h-screen bg-gradient-to-br from-neutral-950 to-neutral-900 text-white p-8">
+      <div className="max-w-5xl mx-auto">
+        <h1 className="text-3xl font-bold flex items-center gap-2 mb-6">
+          <Film className="text-red-500" /> AutoYT Canvas
+        </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* LEFT PANEL */}
-        <div className="space-y-4">
-          <textarea
-            placeholder="Tulis ide / konten video di sini..."
-            value={idea}
-            onChange={(e) => setIdea(e.target.value)}
-            className="w-full h-32 p-3 rounded-xl bg-neutral-900 border border-neutral-700"
-          />
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <textarea
+              value={idea}
+              onChange={(e) => setIdea(e.target.value)}
+              placeholder="Contoh: Kisah misteri gunung di Jawa Timur..."
+              className="w-full h-36 p-4 rounded-xl bg-neutral-800 border border-neutral-700"
+            />
 
-          <select className="w-full p-3 rounded-xl bg-neutral-900 border border-neutral-700">
-            <option>Tema Video</option>
-            <option>Horror</option>
-            <option>Misteri</option>
-            <option>Sejarah</option>
-            <option>Legenda</option>
-          </select>
+            <button
+              onClick={generate}
+              disabled={status === "loading"}
+              className="w-full bg-red-600 hover:bg-red-700 py-3 rounded-xl font-semibold flex items-center justify-center gap-2"
+            >
+              {status === "loading" ? <Loader2 className="animate-spin" /> : <Sparkles />}
+              Generate Video
+            </button>
+          </div>
 
-          <select className="w-full p-3 rounded-xl bg-neutral-900 border border-neutral-700">
-            <option>Bahasa</option>
-            <option>Indonesia</option>
-            <option>English</option>
-            <option>Spanish</option>
-          </select>
+          <div className="bg-neutral-800 rounded-2xl p-4 flex flex-col items-center justify-center">
+            {!videoUrl && <p className="opacity-60">Preview video MP4</p>}
 
-          <select className="w-full p-3 rounded-xl bg-neutral-900 border border-neutral-700">
-            <option>Voice Over</option>
-            <option>Pria</option>
-            <option>Perempuan</option>
-          </select>
-
-          <select className="w-full p-3 rounded-xl bg-neutral-900 border border-neutral-700">
-            <option>Gaya Video</option>
-            <option>Cinematic</option>
-            <option>Anime</option>
-            <option>Cartoon</option>
-            <option>CGI</option>
-          </select>
-
-          <button className="w-full bg-red-600 hover:bg-red-700 py-3 rounded-xl font-bold">
-            🚀 Generate Video
-          </button>
-        </div>
-
-        {/* RIGHT PANEL */}
-        <div className="bg-neutral-900 rounded-2xl p-4 flex flex-col items-center justify-center">
-          <p className="opacity-60">Preview video akan muncul di sini</p>
+            {videoUrl && (
+              <>
+                <video src={videoUrl} controls className="rounded-xl" />
+                <a
+                  href={videoUrl}
+                  download
+                  className="mt-4 flex items-center gap-2 bg-neutral-700 px-4 py-2 rounded-lg"
+                >
+                  <Download /> Download MP4
+                </a>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
