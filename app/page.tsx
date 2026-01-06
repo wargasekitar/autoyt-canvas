@@ -7,9 +7,10 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   async function generate() {
-    setLoading(true);
-    setResult("");
+  setLoading(true);
+  setResult("");
 
+  try {
     const res = await fetch("/api/generate-script", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -17,9 +18,18 @@ export default function Home() {
     });
 
     const data = await res.json();
-    setResult(data.output);
-    setLoading(false);
+
+    if (!res.ok) {
+      setResult("ERROR: " + (data.error || "Unknown error"));
+    } else {
+      setResult(data.output || "AI tidak mengembalikan teks.");
+    }
+  } catch (err) {
+    setResult("FETCH ERROR: tidak bisa menghubungi server");
   }
+
+  setLoading(false);
+}
 
   return (
     <main className="min-h-screen bg-slate-950 text-white p-8">
