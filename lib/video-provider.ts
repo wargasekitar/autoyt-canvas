@@ -1,9 +1,8 @@
-// lib/video-provider.ts
 const API = "https://api.replicate.com/v1/predictions";
 const TOKEN = process.env.REPLICATE_API_TOKEN!;
 
-// contoh model video (ganti kalau mau)
-const MODEL_VERSION = "f4e4c3e3c9a6c6b1a9b9b7d3f6b5f2b1"; // contoh
+// contoh model text-to-video (placeholder)
+const MODEL_VERSION = "f4e4c3e3c9a6c6b1a9b9b7d3f6b5f2b1";
 
 export async function createVideoTask(prompt: string) {
   const res = await fetch(API, {
@@ -17,6 +16,7 @@ export async function createVideoTask(prompt: string) {
       input: {
         prompt,
         duration: 30,
+        aspect_ratio: "9:16",
       },
     }),
   });

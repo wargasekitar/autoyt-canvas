@@ -1,10 +1,38 @@
-export function buildPrompt(idea: string) {
+export function buildPrompt({
+  idea,
+  style,
+  theme,
+  duration,
+  narrator,
+}: {
+  idea: string;
+  style: string;
+  theme: string;
+  duration: string;
+  narrator: string;
+}) {
   return `
-Create a cinematic AI video.
-Style: dramatic, cinematic lighting, smooth camera motion
-Mood: mystery, engaging
-Duration: 30 seconds
-Topic: ${idea}
-Ultra realistic, 4K, film grain.
+Create an AI-generated video.
+
+Topic:
+${idea}
+
+Style:
+${style}
+
+Theme:
+${theme}
+
+Narration:
+${narrator}
+
+Duration:
+${duration}
+
+Visual:
+Ultra high quality, cinematic lighting, smooth camera movement,
+professional composition, 4K quality, film grain, dramatic mood.
+
+Avoid text on screen unless cinematic.
 `;
 }
