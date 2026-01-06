@@ -1,59 +1,61 @@
-"use client";
 import { useState } from "react";
 
-export default function Home() {
-  const [text, setText] = useState("");
-  const [result, setResult] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  async function generate() {
-  setLoading(true);
-  setResult("");
-
-  try {
-    const res = await fetch("/api/generate-script", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text, mode: "short" }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      setResult("ERROR: " + (data.error || "Unknown error"));
-    } else {
-      setResult(data.output || "AI tidak mengembalikan teks.");
-    }
-  } catch (err) {
-    setResult("FETCH ERROR: tidak bisa menghubungi server");
-  }
-
-  setLoading(false);
-}
+export default function DashboardPage() {
+  const [idea, setIdea] = useState("");
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white p-8">
-      <h1 className="text-3xl font-bold mb-4">AutoYT Canvas 2026 🎬</h1>
+    <div className="min-h-screen bg-neutral-950 text-white p-6">
+      <h1 className="text-2xl font-bold mb-6">🎬 AutoYT Canvas</h1>
 
-      <textarea
-        className="w-full h-40 p-4 rounded bg-slate-900 border border-slate-700"
-        placeholder="Masukkan ide konten sengan detail.."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* LEFT PANEL */}
+        <div className="space-y-4">
+          <textarea
+            placeholder="Tulis ide / konten video di sini..."
+            value={idea}
+            onChange={(e) => setIdea(e.target.value)}
+            className="w-full h-32 p-3 rounded-xl bg-neutral-900 border border-neutral-700"
+          />
 
-      <button
-        onClick={generate}
-        className="mt-4 px-6 py-3 rounded bg-red-600 hover:bg-red-700"
-      >
-        {loading ? "Generating..." : "Generate Script AI"}
-      </button>
+          <select className="w-full p-3 rounded-xl bg-neutral-900 border border-neutral-700">
+            <option>Tema Video</option>
+            <option>Horror</option>
+            <option>Misteri</option>
+            <option>Sejarah</option>
+            <option>Legenda</option>
+          </select>
 
-      {result && (
-        <pre className="mt-6 whitespace-pre-wrap bg-slate-900 p-4 rounded border border-slate-700">
-          {result}
-        </pre>
-      )}
-    </main>
+          <select className="w-full p-3 rounded-xl bg-neutral-900 border border-neutral-700">
+            <option>Bahasa</option>
+            <option>Indonesia</option>
+            <option>English</option>
+            <option>Spanish</option>
+          </select>
+
+          <select className="w-full p-3 rounded-xl bg-neutral-900 border border-neutral-700">
+            <option>Voice Over</option>
+            <option>Pria</option>
+            <option>Perempuan</option>
+          </select>
+
+          <select className="w-full p-3 rounded-xl bg-neutral-900 border border-neutral-700">
+            <option>Gaya Video</option>
+            <option>Cinematic</option>
+            <option>Anime</option>
+            <option>Cartoon</option>
+            <option>CGI</option>
+          </select>
+
+          <button className="w-full bg-red-600 hover:bg-red-700 py-3 rounded-xl font-bold">
+            🚀 Generate Video
+          </button>
+        </div>
+
+        {/* RIGHT PANEL */}
+        <div className="bg-neutral-900 rounded-2xl p-4 flex flex-col items-center justify-center">
+          <p className="opacity-60">Preview video akan muncul di sini</p>
+        </div>
+      </div>
+    </div>
   );
 }
