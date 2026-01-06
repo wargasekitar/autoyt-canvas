@@ -1,27 +1,28 @@
-import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { title } = await req.json();
+    console.log("ENV KEY:", process.env.GEMINI_API_KEY ? "ADA" : "KOSONG");
 
-    const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
+    const { text, mode } = await req.json();
 
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash"
+      model: "gemini-1.5-flash",
     });
 
     const result = await model.generateContent(
-      `Buatkan script YouTube menarik tentang: ${title}`
+      `Buatkan script YouTube tentang: ${text}`
     );
 
     return NextResponse.json({
-      script: result.response.text()
+      output: result.response.text(),
     });
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    console.error("GEN ERROR:", error);
     return NextResponse.json(
-      { error: "AI generation failed" },
+      { error: error.message || "AI generation failed" },
       { status: 500 }
     );
   }
