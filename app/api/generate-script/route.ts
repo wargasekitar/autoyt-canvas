@@ -1,35 +1,23 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export async function POST(req: Request) {
   try {
-    const { text, mode } = await req.json();
+    const { title } = await req.json();
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+    const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: "gemini-1.5-flash"
     });
 
-    const prompt = `
-Kamu adalah AI YouTube Automation.
-Ubah teks berikut menjadi script video ${mode}.
+    const result = await model.generateContent(
+      `Buatkan script YouTube menarik tentang: ${title}`
+    );
 
-RULE:
-- Bagi menjadi scene
-- Sertakan narasi voice over
-- Sertakan deskripsi visual per scene
-- Bahasa Indonesia
-- Ringkas tapi engaging
-
-TEKS:
-${text}
-`;
-
-    const result = await model.generateContent(prompt);
-    const output = result.response.text();
-
-    return NextResponse.json({ output });
+    return NextResponse.json({
+      script: result.response.text()
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
