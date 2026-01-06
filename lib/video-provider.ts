@@ -16,7 +16,7 @@ export async function createVideoTask(prompt: string) {
       input: {
         prompt,
         duration: 30,
-        aspect_ratio: "9:16",
+        // aspect_ratio: aspect, // 9:16 | 16:9 | 1:1
         watermark_text: true, // provider-ready
         background_music: true,
       },

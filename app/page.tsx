@@ -21,6 +21,9 @@ export default function DashboardPage() {
   const [narrator, setNarrator] = useState("Male");
   const [duration, setDuration] = useState("Short (30s)");
   const [theme, setTheme] = useState("Misteri");
+  const [aspect, setAspect] = useState("9:16");
+  const [voiceLang, setVoiceLang] = useState("id-ID");
+  const [voiceGender, setVoiceGender] = useState("male");
 
   const [watermark, setWatermark] = useState("AutoYT Canvas");
   const [bgm, setBgm] = useState("none");
@@ -43,7 +46,10 @@ export default function DashboardPage() {
       theme,
       watermark,
       bgm,
-      }),
+      aspect,
+      voiceLang,
+      voiceGender,
+    }),
     });
 
     const { taskId } = await res.json();
@@ -67,9 +73,10 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
           <Film className="text-red-500" />
-          <h1 className="text-3xl font-bold tracking-tight">
-            AutoYT Canvas Studio
-          </h1>
+          <h1 className="text-3xl font-bold flex items-center gap-3">
+          <Film className="text-red-500" />
+          AutoYT Canvas Studio
+        </h1>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
@@ -123,6 +130,39 @@ export default function DashboardPage() {
               </div>
 
               <div>
+              <label className="text-xs mb-1 flex items-center gap-1 text-neutral-400">
+                <Mic size={14} /> Voice AI
+              </label>
+              <select
+                value={voiceGender}
+                onChange={(e) => setVoiceGender(e.target.value)}
+                className="w-full p-2 rounded-lg bg-neutral-800 border border-neutral-700"
+              >
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="text-xs mb-1 flex items-center gap-1 text-neutral-400">
+                🌍 Language
+              </label>
+              <select
+                value={voiceLang}
+                onChange={(e) => setVoiceLang(e.target.value)}
+                className="w-full p-2 rounded-lg bg-neutral-800 border border-neutral-700"
+              >
+                <option value="id-ID">Indonesia</option>
+                <option value="en-US">English</option>
+                <option value="es-ES">Spanish</option>
+                <option value="pt-BR">Brazil</option>
+                <option value="it-IT">Italian</option>
+                <option value="de-DE">German</option>
+              </select>
+            </div>
+
+
+              <div>
                 <label className="text-xs mb-1 flex items-center gap-1 text-neutral-400">
                   <Video size={14} /> Durasi
                 </label>
@@ -135,6 +175,21 @@ export default function DashboardPage() {
                   <option>Short (60s)</option>
                   <option>Long (3–5 min)</option>
                 </select>
+
+                <div>
+                  <label className="text-xs mb-1 flex items-center gap-1 text-neutral-400">
+                    <Video size={14} /> Aspect Ratio
+                  </label>
+                  <select
+                    value={aspect}
+                    onChange={(e) => setAspect(e.target.value)}
+                    className="w-full p-2 rounded-lg bg-neutral-800 border border-neutral-700"
+                  >
+                    <option value="9:16">Shorts (9:16)</option>
+                    <option value="16:9">YouTube (16:9)</option>
+                    <option value="1:1">Square (1:1)</option>
+                  </select>
+                </div>
               </div>
 
               <div>
