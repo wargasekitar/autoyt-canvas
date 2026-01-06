@@ -16,7 +16,7 @@ export async function POST(req: Request) {
         },
         body: JSON.stringify({
           prompt: {
-            text: `Buatkan script YouTube yang informatif, naratif, dan engaging tentang:\n${text}`,
+            text: `Buatkan script YouTube yang informatif dan engaging tentang:\n${text}`,
           },
           temperature: 0.7,
           maxOutputTokens: 512,
@@ -24,7 +24,26 @@ export async function POST(req: Request) {
       }
     );
 
-    const data = await res.json();
+    const raw = await res.text(); // 🔑 KUNCI UTAMA
+
+    if (!raw) {
+      console.error("EMPTY RESPONSE FROM GEMINI");
+      return NextResponse.json(
+        { error: "Empty response from Gemini API" },
+        { status: 500 }
+      );
+    }
+
+    let data;
+    try {
+      data = JSON.parse(raw);
+    } catch (e) {
+      console.error("RAW RESPONSE:", raw);
+      return NextResponse.json(
+        { error: "Invalid JSON from Gemini API" },
+        { status: 500 }
+      );
+    }
 
     if (!res.ok) {
       console.error("GEMINI ERROR:", data);
