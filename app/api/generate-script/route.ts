@@ -7,7 +7,7 @@ export async function POST(req: Request) {
     const { text } = await req.json();
 
     const res = await fetch(
-      "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" +
+      "https://generativelanguage.googleapis.com/v1/models/text-bison-001:generateText?key=" +
         process.env.GEMINI_API_KEY,
       {
         method: "POST",
@@ -15,16 +15,11 @@ export async function POST(req: Request) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [
-                {
-                  text: `Buatkan script YouTube yang informatif dan menarik tentang: ${text}`,
-                },
-              ],
-            },
-          ],
+          prompt: {
+            text: `Buatkan script YouTube yang informatif, naratif, dan engaging tentang:\n${text}`,
+          },
+          temperature: 0.7,
+          maxOutputTokens: 512,
         }),
       }
     );
@@ -34,13 +29,13 @@ export async function POST(req: Request) {
     if (!res.ok) {
       console.error("GEMINI ERROR:", data);
       return NextResponse.json(
-        { error: "Gemini API error" },
+        { error: data.error?.message || "Gemini API error" },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
-      output: data.candidates?.[0]?.content?.parts?.[0]?.text || "",
+      output: data.candidates?.[0]?.output || "",
     });
   } catch (err: any) {
     console.error("GEN ERROR:", err);
