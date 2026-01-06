@@ -37,7 +37,7 @@ export default function Home() {
 
       <textarea
         className="w-full h-40 p-4 rounded bg-slate-900 border border-slate-700"
-        placeholder="Masukkan ide / artikel / naskah..."
+        placeholder="Masukkan ide konten sengan detail.."
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
