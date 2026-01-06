@@ -17,6 +17,8 @@ export async function createVideoTask(prompt: string) {
         prompt,
         duration: 30,
         aspect_ratio: "9:16",
+        watermark_text: true, // provider-ready
+        background_music: true,
       },
     }),
   });
