@@ -1,4 +1,10 @@
-// lib/ai.ts
 export function buildPrompt(idea: string) {
-  return `Create a cinematic AI video about: ${idea}, dramatic lighting, smooth camera movement, 4k.`;
+  return `
+Create a cinematic AI video.
+Style: dramatic, cinematic lighting, smooth camera motion
+Mood: mystery, engaging
+Duration: 30 seconds
+Topic: ${idea}
+Ultra realistic, 4K, film grain.
+`;
 }

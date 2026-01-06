@@ -28,6 +28,12 @@ export default function DashboardPage() {
     }, 4000);
   };
 
+  <input
+    type="password"
+    placeholder="Google AI Studio API Key"
+    className="w-full p-3 rounded-xl bg-neutral-800 border border-neutral-700"
+  />
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-950 to-neutral-900 text-white p-8">
       <div className="max-w-5xl mx-auto">
@@ -75,3 +81,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+
