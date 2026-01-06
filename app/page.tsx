@@ -33,7 +33,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-slate-950 text-white p-8">
-      <h1 className="text-3xl font-bold mb-4">AutoYT Canvas 🎬</h1>
+      <h1 className="text-3xl font-bold mb-4">AutoYT Canvas 2026 🎬</h1>
 
       <textarea
         className="w-full h-40 p-4 rounded bg-slate-900 border border-slate-700"
