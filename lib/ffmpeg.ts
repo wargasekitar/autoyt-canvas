@@ -3,6 +3,5 @@ export async function getFFmpeg() {
   const ffmpegInstaller = await import("@ffmpeg-installer/ffmpeg");
 
   ffmpeg.setFfmpegPath(ffmpegInstaller.path);
-
   return ffmpeg;
 }
