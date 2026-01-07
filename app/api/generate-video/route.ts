@@ -1,20 +1,11 @@
 import { NextResponse } from "next/server";
-import { buildPrompt } from "../../../lib/ai";
-import { createVideoTask } from "../../../lib/video-provider";
 
-export async function POST(req: Request) {
-  const body = await req.json();
+export const dynamic = "force-dynamic";
 
-  const userGeminiKey = req.headers.get("x-user-gemini-key");
-    if (!userGeminiKey) {
-    return NextResponse.json(
-        { error: "Missing user API key" },
-        { status: 400 }
-    );
-    }
+export async function POST() {
+  console.log("GENERATE VIDEO HIT");
 
-  const prompt = buildPrompt(body);
-  const taskId = await createVideoTask(prompt);
-
-  return NextResponse.json({ taskId });
+  return NextResponse.json({
+    videoUrl: "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4",
+  });
 }

@@ -38,45 +38,64 @@ export default function DashboardPage() {
   const [bgm, setBgm] = useState("none");
   const [userApiKey, setUserApiKey] = useState("");
 
+  //  COBA DEBUG
   const generate = async () => {
-    setStatus("loading");
+  setStatus("loading");
 
-    const res = await fetch("/api/generate-video", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-user-gemini-key": userApiKey,
-      },
-      body: JSON.stringify({
-        idea,
-        style,
-        narrator,
-        duration,
-        theme,
-        watermark,
-        bgm,
-        aspect,
-        voiceLang,
-        voiceGender,
-        voiceStyle,
-        watermarkScale,
-        bgmVolume,
-      }),
-    });
+  const res = await fetch("/api/generate-video", {
+    method: "POST",
+  });
 
-    const { taskId } = await res.json();
+  const data = await res.json();
 
-    const interval = setInterval(async () => {
-      const check = await fetch(`/api/check-status?taskId=${taskId}`);
-      const data = await check.json();
+  if (data.videoUrl) {
+    setVideoUrl(data.videoUrl);
+    setStatus("done");
+  } else {
+    alert("Backend tidak mengembalikan video");
+    setStatus("idle");
+  }
+};
 
-      if (data.status === "done") {
-        clearInterval(interval);
-        setVideoUrl(data.videoUrl);
-        setStatus("done");
-      }
-    }, 4000);
-  };
+  // const generate = async () => {
+  //   setStatus("loading");
+
+  //   const res = await fetch("/api/generate-video", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       "x-user-gemini-key": userApiKey,
+  //     },
+  //     body: JSON.stringify({
+  //       idea,
+  //       style,
+  //       narrator,
+  //       duration,
+  //       theme,
+  //       watermark,
+  //       bgm,
+  //       aspect,
+  //       voiceLang,
+  //       voiceGender,
+  //       voiceStyle,
+  //       watermarkScale,
+  //       bgmVolume,
+  //     }),
+  //   });
+
+  //   const { taskId } = await res.json();
+
+  //   const interval = setInterval(async () => {
+  //     const check = await fetch(`/api/check-status?taskId=${taskId}`);
+  //     const data = await check.json();
+
+  //     if (data.status === "done") {
+  //       clearInterval(interval);
+  //       setVideoUrl(data.videoUrl);
+  //       setStatus("done");
+  //     }
+  //   }, 4000);
+  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-neutral-900 to-black text-white p-8">
