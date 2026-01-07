@@ -1,11 +1,32 @@
 import { NextResponse } from "next/server";
+import path from "path";
+import fs from "fs";
 
 export const dynamic = "force-dynamic";
 
-export async function POST() {
-  console.log("GENERATE VIDEO HIT");
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    console.log("REQUEST DATA:", body);
 
-  return NextResponse.json({
-    videoUrl: "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4",
-  });
+    // 🔹 sementara: pakai video dummy lokal
+    const outputName = `video-${Date.now()}.mp4`;
+    const outputPath = path.join("/tmp", outputName);
+
+    // copy video dummy → seolah hasil AI
+    fs.copyFileSync(
+      path.join(process.cwd(), "public/sample.mp4"),
+      outputPath
+    );
+
+    return NextResponse.json({
+      videoUrl: `/api/stream-video?file=${outputName}`,
+    });
+  } catch (err: any) {
+    console.error("GEN ERROR:", err);
+    return NextResponse.json(
+      { error: "Generate failed" },
+      { status: 500 }
+    );
+  }
 }

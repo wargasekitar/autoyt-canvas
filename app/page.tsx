@@ -39,11 +39,46 @@ export default function DashboardPage() {
   const [userApiKey, setUserApiKey] = useState("");
 
   //  COBA DEBUG
+//   const generate = async () => {
+//   setStatus("loading");
+
+//   const res = await fetch("/api/generate-video", {
+//     method: "POST",
+//   });
+
+//   const data = await res.json();
+
+//   if (data.videoUrl) {
+//     setVideoUrl(data.videoUrl);
+//     setStatus("done");
+//   } else {
+//     alert("Backend tidak mengembalikan video");
+//     setStatus("idle");
+//   }
+// };
+
   const generate = async () => {
   setStatus("loading");
 
   const res = await fetch("/api/generate-video", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-user-gemini-key": userApiKey,
+    },
+    body: JSON.stringify({
+      idea,
+      style,
+      narrator,
+      duration,
+      theme,
+      watermark,
+      bgm,
+      aspect,
+      voiceLang,
+      voiceGender,
+      voiceStyle,
+    }),
   });
 
   const data = await res.json();
@@ -52,50 +87,11 @@ export default function DashboardPage() {
     setVideoUrl(data.videoUrl);
     setStatus("done");
   } else {
-    alert("Backend tidak mengembalikan video");
+    alert("Gagal generate video");
     setStatus("idle");
   }
 };
 
-  // const generate = async () => {
-  //   setStatus("loading");
-
-  //   const res = await fetch("/api/generate-video", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       "x-user-gemini-key": userApiKey,
-  //     },
-  //     body: JSON.stringify({
-  //       idea,
-  //       style,
-  //       narrator,
-  //       duration,
-  //       theme,
-  //       watermark,
-  //       bgm,
-  //       aspect,
-  //       voiceLang,
-  //       voiceGender,
-  //       voiceStyle,
-  //       watermarkScale,
-  //       bgmVolume,
-  //     }),
-  //   });
-
-  //   const { taskId } = await res.json();
-
-  //   const interval = setInterval(async () => {
-  //     const check = await fetch(`/api/check-status?taskId=${taskId}`);
-  //     const data = await check.json();
-
-  //     if (data.status === "done") {
-  //       clearInterval(interval);
-  //       setVideoUrl(data.videoUrl);
-  //       setStatus("done");
-  //     }
-  //   }, 4000);
-  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-neutral-900 to-black text-white p-8">
