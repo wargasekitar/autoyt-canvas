@@ -1,6 +1,8 @@
-import ffmpeg from "fluent-ffmpeg";
-import ffmpegPath from "@ffmpeg-installer/ffmpeg";
+export async function getFFmpeg() {
+  const ffmpeg = (await import("fluent-ffmpeg")).default;
+  const ffmpegInstaller = await import("@ffmpeg-installer/ffmpeg");
 
-ffmpeg.setFfmpegPath(ffmpegPath.path);
+  ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
-export default ffmpeg;
+  return ffmpeg;
+}
