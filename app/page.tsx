@@ -24,6 +24,9 @@ export default function DashboardPage() {
   const [aspect, setAspect] = useState("9:16");
   const [voiceLang, setVoiceLang] = useState("id-ID");
   const [voiceGender, setVoiceGender] = useState("male");
+  const [bgmFile, setBgmFile] = useState<File | null>(null);
+  const [watermarkFile, setWatermarkFile] = useState<File | null>(null);
+  const [voiceStyle, setVoiceStyle] = useState("mystery");
 
   const [watermark, setWatermark] = useState("AutoYT Canvas");
   const [bgm, setBgm] = useState("none");
@@ -49,6 +52,7 @@ export default function DashboardPage() {
       aspect,
       voiceLang,
       voiceGender,
+      voiceStyle,
     }),
     });
 
@@ -145,6 +149,23 @@ return (
               </select>
             </div>
 
+            <div>
+  <label className="text-xs flex items-center gap-1 text-neutral-400">
+    🎭 Voice Style
+  </label>
+  <select
+    value={voiceStyle}
+    onChange={(e) => setVoiceStyle(e.target.value)}
+    className="w-full p-2 rounded-lg bg-neutral-800 border border-neutral-700"
+  >
+    <option value="horror">Horror (Deep, Dramatic)</option>
+    <option value="mystery">Misteri (Calm, Suspense)</option>
+    <option value="fun">Fun (Energetic)</option>
+    <option value="history">Sejarah (Formal)</option>
+  </select>
+</div>
+
+
             {/* Language */}
             <div>
               <label className="text-xs flex items-center gap-1 text-neutral-400">
@@ -216,29 +237,60 @@ return (
 
             {/* Watermark */}
             <div>
-              <label className="text-xs text-neutral-400">🖋️ Watermark</label>
-              <input
-                value={watermark}
-                onChange={(e) => setWatermark(e.target.value)}
-                className="w-full p-2 rounded-lg bg-neutral-800 border border-neutral-700"
-              />
-            </div>
+  <label className="text-xs flex items-center gap-1 text-neutral-400">
+    🖼️ Watermark (Logo / Gambar)
+  </label>
 
+  <input
+    type="file"
+    accept="image/*"
+    onChange={(e) => setWatermarkFile(e.target.files?.[0] || null)}
+    className="w-full text-xs text-neutral-400
+      file:mr-3 file:py-2 file:px-4
+      file:rounded-lg file:border-0
+      file:bg-neutral-700 file:text-white
+      hover:file:bg-neutral-600"
+  />
+
+  {!watermarkFile && (
+    <input
+      value={watermark}
+      onChange={(e) => setWatermark(e.target.value)}
+      placeholder="Contoh: @channelkamu"
+      className="mt-2 w-full p-2 rounded-lg bg-neutral-800 border border-neutral-700"
+    />
+  )}
+</div>
             {/* Music */}
             <div>
-              <label className="text-xs text-neutral-400">🎵 Background Music</label>
-              <select
-                value={bgm}
-                onChange={(e) => setBgm(e.target.value)}
-                className="w-full p-2 rounded-lg bg-neutral-800 border border-neutral-700"
-              >
-                <option value="none">Tanpa Musik</option>
-                <option value="cinematic">Cinematic</option>
-                <option value="horror">Horror</option>
-                <option value="uplifting">Uplifting</option>
-              </select>
-            </div>
-          </div>
+  <label className="text-xs flex items-center gap-1 text-neutral-400">
+    🎵 Background Music
+  </label>
+
+  <input
+    type="file"
+    accept="audio/*"
+    onChange={(e) => setBgmFile(e.target.files?.[0] || null)}
+    className="w-full text-xs text-neutral-400
+      file:mr-3 file:py-2 file:px-4
+      file:rounded-lg file:border-0
+      file:bg-neutral-700 file:text-white
+      hover:file:bg-neutral-600"
+  />
+
+  {!bgmFile && (
+    <select
+      value={bgm}
+      onChange={(e) => setBgm(e.target.value)}
+      className="mt-2 w-full p-2 rounded-lg bg-neutral-800 border border-neutral-700"
+    >
+      <option value="none">Tanpa Musik</option>
+      <option value="cinematic">Cinematic</option>
+      <option value="horror">Horror</option>
+      <option value="uplifting">Uplifting</option>
+    </select>
+  )}
+</div>
 
           {/* Generate */}
           <button
