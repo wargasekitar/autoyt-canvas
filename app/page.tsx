@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { PRESETS } from "@/lib/presets";
 import {
   Film,
   Sparkles,
@@ -256,6 +257,21 @@ export default function DashboardPage() {
                 )}
               </div>
             </div>
+
+            <button
+              onClick={() => {
+                const p = PRESETS.horror;
+                setStyle(p.style);
+                setTheme(p.theme);
+                setVoiceStyle(p.voiceStyle);
+                setBgm(p.bgm);
+                setAspect(p.aspect);
+                setDuration(p.duration);
+              }}
+              className="bg-neutral-700 px-3 py-2 rounded-lg text-sm"
+            >
+              👻 Horror Template
+            </button>
 
             <button
               onClick={generate}
