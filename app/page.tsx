@@ -58,40 +58,43 @@ export default function DashboardPage() {
 // };
 
   const generate = async () => {
-  setStatus("loading");
+  try {
+    setStatus("loading");
 
-  const res = await fetch("/api/generate-video", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-user-gemini-key": userApiKey,
-    },
-    body: JSON.stringify({
-      idea,
-      style,
-      narrator,
-      duration,
-      theme,
-      watermark,
-      bgm,
-      aspect,
-      voiceLang,
-      voiceGender,
-      voiceStyle,
-    }),
-  });
+    const res = await fetch("/api/generate-video", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-user-gemini-key": userApiKey,
+      },
+      body: JSON.stringify({
+        idea,
+        style,
+        narrator,
+        duration,
+        theme,
+        watermark,
+        bgm,
+        aspect,
+        voiceLang,
+        voiceGender,
+        voiceStyle,
+      }),
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (data.videoUrl) {
+    if (!res.ok || !data.videoUrl) {
+      throw new Error("Generate gagal");
+    }
+
     setVideoUrl(data.videoUrl);
     setStatus("done");
-  } else {
+  } catch (err) {
     alert("Gagal generate video");
     setStatus("idle");
   }
 };
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-neutral-900 to-black text-white p-8">
