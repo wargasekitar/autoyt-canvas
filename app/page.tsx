@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { PRESETS } from "@/lib/presets";
+
 import {
   Film,
   Sparkles,
@@ -258,21 +259,28 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <button
-              onClick={() => {
-                const p = PRESETS.horror;
-                setStyle(p.style);
-                setTheme(p.theme);
-                setVoiceStyle(p.voiceStyle);
-                setBgm(p.bgm);
-                setAspect(p.aspect);
-                setDuration(p.duration);
-              }}
-              className="bg-neutral-700 px-3 py-2 rounded-lg text-sm"
-            >
-              👻 Horror Template
-            </button>
+            <div className="space-y-2">
+            <p className="text-xs text-neutral-400">🎯 Template 1-Klik</p>
 
+            <div className="grid grid-cols-2 gap-2">
+              {Object.values(PRESETS).map((preset) => (
+                <button
+                  key={preset.label}
+                  onClick={() => {
+                    setStyle(preset.style);
+                    setTheme(preset.theme);
+                    setVoiceStyle(preset.voiceStyle);
+                    setBgm(preset.bgm);
+                    setAspect(preset.aspect);
+                    setDuration(preset.duration);
+                  }}
+                  className="bg-neutral-800 hover:bg-neutral-700 text-xs px-3 py-2 rounded-lg text-left"
+                >
+                  {preset.label}
+                </button>
+              ))}
+            </div>
+          </div>
             <button
               onClick={generate}
               disabled={status === "loading"}
