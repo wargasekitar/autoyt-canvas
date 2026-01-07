@@ -30,6 +30,9 @@ export default function DashboardPage() {
 
   const [bgmFile, setBgmFile] = useState<File | null>(null);
   const [watermarkFile, setWatermarkFile] = useState<File | null>(null);
+  const [watermarkScale, setWatermarkScale] = useState(30); // %
+  const [bgmVolume, setBgmVolume] = useState(70); // %
+
 
   const [watermark, setWatermark] = useState("AutoYT Canvas");
   const [bgm, setBgm] = useState("none");
@@ -56,6 +59,8 @@ export default function DashboardPage() {
         voiceLang,
         voiceGender,
         voiceStyle,
+        watermarkScale,
+        bgmVolume,
       }),
     });
 
@@ -217,70 +222,135 @@ export default function DashboardPage() {
                 </select>
               </div>
 
-              <div>
-                <label className="text-xs text-neutral-400">🖼️ Watermark</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) =>
-                    setWatermarkFile(e.target.files?.[0] || null)
-                  }
-                  className="w-full text-xs text-neutral-400"
-                />
-                {!watermarkFile && (
-                  <input
-                    value={watermark}
-                    onChange={(e) => setWatermark(e.target.value)}
-                    className="mt-2 w-full p-2 rounded-lg bg-neutral-800 border border-neutral-700"
-                  />
-                )}
-              </div>
+              {/* Watermark */}
+<div className="col-span-2 space-y-2">
+  <label className="text-xs flex items-center gap-1 text-neutral-400">
+    🖼️ Watermark (Logo / Gambar)
+  </label>
 
-              <div>
-                <label className="text-xs text-neutral-400">🎵 Background Music</label>
-                <input
-                  type="file"
-                  accept="audio/*"
-                  onChange={(e) => setBgmFile(e.target.files?.[0] || null)}
-                  className="w-full text-xs text-neutral-400"
-                />
-                {!bgmFile && (
-                  <select
-                    value={bgm}
-                    onChange={(e) => setBgm(e.target.value)}
-                    className="mt-2 w-full p-2 rounded-lg bg-neutral-800 border border-neutral-700"
-                  >
-                    <option value="none">Tanpa Musik</option>
-                    <option value="cinematic">Cinematic</option>
-                    <option value="horror">Horror</option>
-                    <option value="uplifting">Uplifting</option>
-                  </select>
-                )}
-              </div>
+  <input
+    type="file"
+    accept="image/*"
+    onChange={(e) => setWatermarkFile(e.target.files?.[0] || null)}
+    className="w-full text-xs text-neutral-400
+      file:mr-3 file:py-2 file:px-4
+      file:rounded-lg file:border-0
+      file:bg-neutral-700 file:text-white
+      hover:file:bg-neutral-600"
+  />
+
+  {/* Preview */}
+  {watermarkFile && (
+    <div className="flex items-center gap-4 mt-2">
+      <img
+        src={URL.createObjectURL(watermarkFile)}
+        alt="Watermark Preview"
+        className="h-16 w-auto rounded-lg border border-neutral-700 bg-neutral-800"
+      />
+
+      <div className="flex-1">
+        <label className="text-xs text-neutral-400">
+          Ukuran Watermark ({watermarkScale}%)
+        </label>
+        <input
+          type="range"
+          min={5}
+          max={100}
+          value={watermarkScale}
+          onChange={(e) => setWatermarkScale(Number(e.target.value))}
+          className="w-full accent-red-500"
+        />
+      </div>
+    </div>
+  )}
+
+  {!watermarkFile && (
+    <input
+      value={watermark}
+      onChange={(e) => setWatermark(e.target.value)}
+      placeholder="Contoh: @channelkamu"
+      className="w-full p-2 rounded-lg bg-neutral-800 border border-neutral-700"
+    />
+  )}
+</div>
+
+              {/* Background Music */}
+<div className="col-span-2 space-y-2">
+  <label className="text-xs flex items-center gap-1 text-neutral-400">
+    🎵 Background Music
+  </label>
+
+  <input
+    type="file"
+    accept="audio/*"
+    onChange={(e) => setBgmFile(e.target.files?.[0] || null)}
+    className="w-full text-xs text-neutral-400
+      file:mr-3 file:py-2 file:px-4
+      file:rounded-lg file:border-0
+      file:bg-neutral-700 file:text-white
+      hover:file:bg-neutral-600"
+  />
+
+  {!bgmFile && (
+    <select
+      value={bgm}
+      onChange={(e) => setBgm(e.target.value)}
+      className="w-full p-2 rounded-lg bg-neutral-800 border border-neutral-700"
+    >
+      <option value="none">Tanpa Musik</option>
+      <option value="cinematic">Cinematic</option>
+      <option value="horror">Horror</option>
+      <option value="uplifting">Uplifting</option>
+    </select>
+  )}
+
+  {(bgmFile || bgm !== "none") && (
+    <div>
+      <label className="text-xs text-neutral-400">
+        🔊 Volume Musik ({bgmVolume}%)
+      </label>
+      <input
+        type="range"
+        min={0}
+        max={100}
+        value={bgmVolume}
+        onChange={(e) => setBgmVolume(Number(e.target.value))}
+        className="w-full accent-red-500"
+      />
+    </div>
+  )}
+</div>
+
             </div>
 
-            <div className="space-y-2">
-            <p className="text-xs text-neutral-400">🎯 Template 1-Klik</p>
+            <div>
+              <label className="text-xs text-neutral-400 mb-1 block">
+                🎯 Template Cerita
+              </label>
 
-            <div className="grid grid-cols-2 gap-2">
-              {Object.values(PRESETS).map((preset) => (
-                <button
-                  key={preset.label}
-                  onClick={() => {
-                    setStyle(preset.style);
-                    setTheme(preset.theme);
-                    setVoiceStyle(preset.voiceStyle);
-                    setBgm(preset.bgm);
-                    setAspect(preset.aspect);
-                    setDuration(preset.duration);
-                  }}
-                  className="bg-neutral-800 hover:bg-neutral-700 text-xs px-3 py-2 rounded-lg text-left"
-                >
-                  {preset.label}
-                </button>
-              ))}
+              <select
+                className="w-full p-2 rounded-lg bg-neutral-800 border border-neutral-700"
+                onChange={(e) => {
+                  const preset = PRESETS[e.target.value];
+                  if (!preset) return;
+
+                  setStyle(preset.style);
+                  setTheme(preset.theme);
+                  setVoiceStyle(preset.voiceStyle);
+                  setBgm(preset.bgm);
+                  setAspect(preset.aspect);
+                  setDuration(preset.duration);
+                }}
+              >
+                <option value="">Pilih Template</option>
+                {Object.entries(PRESETS).map(([key, preset]) => (
+                  <option key={key} value={key}>
+                    {preset.label}
+                  </option>
+                ))}
+              </select>
             </div>
-          </div>
+
             <button
               onClick={generate}
               disabled={status === "loading"}

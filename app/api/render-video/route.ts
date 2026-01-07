@@ -9,11 +9,13 @@ export async function POST(req: Request) {
   const output = `/tmp/final-${Date.now()}.mp4`;
 
   await buildVideo({
-    videoInput: data.baseVideo,
-    audioInput: data.bgmFile,
-    watermarkInput: data.watermarkFile,
-    output,
-  });
+  videoInput: data.baseVideo,
+  audioInput: data.bgmFile,
+  watermarkInput: data.watermarkFile,
+  watermarkScale: data.watermarkScale,
+  bgmVolume: data.bgmVolume,
+  output,
+});
 
   return NextResponse.json({
     videoUrl: output,
